@@ -1,12 +1,20 @@
 import { List, ListItem, Typography } from "@mui/material";
 import Task from "./task-element";
 import { useTasks } from "./tasks-context";
+import { useEffect, useState } from "react";
+import { TaskType } from "./type";
 
 export default function TaskList() {
     const tasks = useTasks();
+    const [planTasks, setPlanTasks] = useState<TaskType[]>([]);
+    const [readyTasks, setReadyTasks] = useState<TaskType[]>([]);   
 
-    const planTasks = tasks.filter(element => !element.done)
-    const readyTasks = tasks.filter(element => element.done)
+    useEffect(() => {
+        const plan = tasks.filter(task => !task.done);
+        const ready = tasks.filter(task => task.done);
+        setPlanTasks(plan);
+        setReadyTasks(ready);
+    }, [tasks]);
 
     console.log(tasks);
     return (
@@ -45,4 +53,4 @@ export default function TaskList() {
             }
         </>
     )
-  }
+}

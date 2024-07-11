@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { useTasks, useTasksDispatch } from './tasks-context';
-import { Box, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
+import { Box, IconButton, InputAdornment, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import { DISPATCH_ERROR, EMPTY_STRING_VALUE, NEW_TASK, NEW_TASK_ERROR } from './constants';
 
 export default function AddTaskForm() {
-    const [text, setText] = useState('');
+    const [text, setText] = useState(EMPTY_STRING_VALUE);
+    const [labelTask, setLabelTask] = useState(NEW_TASK);
+    const [textFieldError, setTextFieldError] = useState(false);
     const tasks = useTasks();
     const dispatch = useTasksDispatch();
 
@@ -14,9 +17,11 @@ export default function AddTaskForm() {
         event.preventDefault();
 
         if(!text.trim()){
+            setLabelTask(NEW_TASK_ERROR)
+            setTextFieldError(true);
             return;
         }
-        setText('');
+        setText(EMPTY_STRING_VALUE);
         if (dispatch) {
             dispatch({
                 type: 'added',
@@ -25,33 +30,41 @@ export default function AddTaskForm() {
                 done: false 
             })
         } else {
-            console.error('Dispatch function is not available.');
+            console.error(DISPATCH_ERROR);
         }
     }
 
     const onChangeTaskText = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if(text === EMPTY_STRING_VALUE){
+            setLabelTask(NEW_TASK);
+            setTextFieldError(false);
+        }
         setText(event.target.value);
     } 
 
-  return (
-    <>  
+    const handleBlur = () => {
+        setLabelTask(NEW_TASK);
+        setTextFieldError(false);
+    };
+
+    return (
         <Box 
             component="form"
             onSubmit={onAddTask}
             display="flex"
             flexDirection="column"
             mx={'auto'}
-            textAlign={'left'}
-            p={2}
-            gap={2}>
-            <Typography color={'#1976d2'} variant="h3" gutterBottom>
-                TODO
-            </Typography>
+            p={2}>
                 <TextField
+                    variant="standard"
+                    error={textFieldError}
                     value={text}
-                    label={'Имя новой задачи'}
-                    variant='standard'
+                    label={labelTask}
                     onChange={onChangeTaskText}
+                    onBlur={handleBlur}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
@@ -63,6 +76,5 @@ export default function AddTaskForm() {
                     }}
                 />   
         </Box>
-    </>
-  );
+    );
 }

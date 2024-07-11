@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useTasksDispatch } from "./tasks-context";
-import { Checkbox, IconButton, TextField } from "@mui/material";
+import { Box, Checkbox, IconButton, TextField, Typography } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoneIcon from '@mui/icons-material/Done';
 import { TaskType } from "./type";
-
-const DISPATCH_ERROR = 'Dispatch function is not available.'; 
+import { DELETE_ICON_COLOR, DISPATCH_ERROR, NAME_TASK } from "./constants";
 
 type TaskProps = {
     task: TaskType;
@@ -57,22 +56,31 @@ export default function Task({ task, isReady }: TaskProps) {
     }
 
     return (
-        <>
-            <Checkbox
+        <Box 
+            display="flex" 
+            alignItems="center" 
+            width="100%">
+            <Checkbox sx={{ flexGrow: 0 }}
                 checked={task.done}
                 onChange={(e) => onChangeCheсked(e.target.checked)}
             />
             {isEditing ? ( 
-                <EditText task={task} onChange={onChangeText} setIsEditing={setIsEditing}/>  
+                <EditText 
+                    task={task} 
+                    onChange={onChangeText} 
+                    setIsEditing={setIsEditing}/>  
             ) : ( 
                 <>
-                    <ShowEditedText task={task} setIsEditing={setIsEditing} isReady={isReady}/>
+                    <ShowEditedText 
+                        task={task} 
+                        setIsEditing={setIsEditing} 
+                        isReady={isReady}/>
                     <IconButton onClick={() => onDelete(task)}>
-                        <DeleteIcon sx={{ color:'#cc4200' }} />
+                        <DeleteIcon sx={{ color: DELETE_ICON_COLOR }} />
                     </IconButton> 
                 </> 
             )}
-        </>
+        </Box>
     );
 }
 
@@ -83,19 +91,23 @@ interface EditTextProps {
     setIsEditing: (isEditing: boolean) => void;
 }
 
-function EditText({task, onChange, setIsEditing}: EditTextProps){
+function EditText({task, onChange, setIsEditing}: EditTextProps) {
     return(
-        <>
+        <Box 
+            display="flex" 
+            flexGrow={1} 
+            alignItems="center">
             <TextField
+                sx={{ flexGrow: 1, marginRight: 1 }}
                 variant="standard"
-                label={'Имя задачи'}
+                label={NAME_TASK}
                 multiline
                 value={task.text}
                 onChange={(e) => onChange(e.target.value)} />
             <IconButton onClick={() => setIsEditing(false)}>
                 <DoneIcon color={'primary'} />
             </IconButton>
-        </>
+        </Box>
 
     )
 }
@@ -106,15 +118,22 @@ interface ShowEditTextProps {
     isReady: boolean;
 }
 
-function ShowEditedText({task, setIsEditing, isReady}: ShowEditTextProps){
+function ShowEditedText({task, setIsEditing, isReady}: ShowEditTextProps) {
     return(
-        <>
-            {task.text}
+        <Box 
+            display="flex" 
+            flexGrow={1} 
+            alignItems="center">
+            <Typography 
+                sx={{ flexGrow: 1, marginRight: 1 }} 
+                component="p">
+                {task.text}
+            </Typography>
             {isReady && 
                 <IconButton onClick={() => setIsEditing(true)}>
                     <EditIcon color={'primary'} />
                 </IconButton>
             }
-        </>
+        </Box>
     )
 }

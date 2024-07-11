@@ -1,4 +1,4 @@
-import { Container } from '@mui/material'
+import { Container, Typography } from '@mui/material'
 import './App.css'
 import AddTaskForm from './task/taks-add';
 import { TasksProvider } from './task/tasks-context';
@@ -13,14 +13,22 @@ function App() {
                     border: '1px dashed grey',
                     color: 'black', 
                     width: {
-                        xs: '320px',    // 0px - 600px
-                        sm: '460px',     // 600px - 960px
-                        md: '600px',     // 960px - 1280px
-                        lg: '980px',     // 1280px - 1920px
-                        xl: '980px'      // 1920px и выше
+                        xs: '320px',
+                        sm: '460px',
+                        md: '600px',
+                        lg: '980px',
+                        xl: '980px'
                     },
                     maxWidth: 'none'
                 }}>
+                <Typography 
+                    variant="h3"
+                    textAlign={'left'}
+                    color={'#1976d2'} 
+                    gutterBottom
+                    sx={{ mt: 4 }}>
+                    TODO
+                </Typography>
                 <TasksProvider>
                     <AddTaskForm/>
                     <TaskList/>
