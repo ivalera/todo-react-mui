@@ -8,7 +8,6 @@ export default function AddTaskForm() {
     const [text, setText] = useState(EMPTY_STRING_VALUE);
     const [labelTask, setLabelTask] = useState(NEW_TASK);
     const [textFieldError, setTextFieldError] = useState(false);
-    const [focused, setFocused] = useState(false);
     const tasks = useTasks();
     const dispatch = useTasksDispatch();
 
@@ -40,21 +39,17 @@ export default function AddTaskForm() {
     };
     
     const handleBlur = () => {
-        if (!text.trim()) {
-            setLabelTask(NEW_TASK);
-            setTextFieldError(false);
-        }
-        setFocused(false);
+        setTextFieldError(false); 
+        
     };
 
     const onChangeTaskText = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if(text === EMPTY_STRING_VALUE){
+        if(!text.trim()) {
             setLabelTask(NEW_TASK);
             setTextFieldError(false);
         }
-      setText(event.target.value);
+        setText(event.target.value);
     }; 
-
 
     return (
         <Box 

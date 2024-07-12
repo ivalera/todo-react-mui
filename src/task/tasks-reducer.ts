@@ -1,6 +1,6 @@
 import { Action, TaskType } from "./type";
 
-function tasksReducer(tasks: TaskType[], action: Action) {
+function tasksReducer(tasks: TaskType[], action: Action) {  
     switch (action.type) {
         case 'added': {
             return [...tasks, {
@@ -10,16 +10,15 @@ function tasksReducer(tasks: TaskType[], action: Action) {
             }];
         }
         case 'changed': {
-            return tasks.map(t => {
-                if (t.id === action.task.id) {
+            return tasks.map(task => {
+                if (task.id === action.task.id) {
                     return action.task;
-                } else {
-                    return t;
                 }
+                return task;
             });
         }
         case 'deleted': {
-            return tasks.filter(t => t.id !== action.id);
+            return tasks.filter(task => task.id !== action.id);
         }
         default: 
             return tasks;
