@@ -10,13 +10,10 @@ export default function TaskList() {
     const [readyTasks, setReadyTasks] = useState<TaskType[]>([]);   
 
     useEffect(() => {
-        const plan = tasks.filter(task => !task.done);
-        const ready = tasks.filter(task => task.done);
-        setPlanTasks(plan);
-        setReadyTasks(ready);
+        setPlanTasks(tasks.filter(task => !task.done));
+        setReadyTasks(tasks.filter(task => task.done).reverse());
     }, [tasks]);
 
-    console.log(tasks);
     return (
         <> 
             {planTasks.length > 0 ? (

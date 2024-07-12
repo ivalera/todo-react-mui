@@ -18,13 +18,6 @@ function TasksProvider({children}: {children: React.ReactNode}) {
     const [tasks, dispatch] = useReducer(tasksReducer, [], initialStorageTasks);
 
     useEffect(() => {
-        const storedTasks = localStorage.getItem(LOCAL_STORAGE_KEY);
-        if (storedTasks) {
-            dispatch({ type: 'initialize', tasks: JSON.parse(storedTasks) });
-        }
-    }, []); 
-
-    useEffect(() => {
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(tasks));
     }, [tasks]);
 

@@ -8,10 +8,9 @@ export default function AddTaskForm() {
     const [text, setText] = useState(EMPTY_STRING_VALUE);
     const [labelTask, setLabelTask] = useState(NEW_TASK);
     const [textFieldError, setTextFieldError] = useState(false);
+    const [focused, setFocused] = useState(false);
     const tasks = useTasks();
     const dispatch = useTasksDispatch();
-
-    let tasksLength = tasks.length;
 
     const onAddTask = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -21,31 +20,41 @@ export default function AddTaskForm() {
             setTextFieldError(true);
             return;
         }
-        setText(EMPTY_STRING_VALUE);
+
         if (dispatch) {
             dispatch({
                 type: 'added',
-                id: tasksLength++,
+                id: tasks.length,
                 text: text,
                 done: false 
             })
+            setText(EMPTY_STRING_VALUE);
         } else {
             console.error(DISPATCH_ERROR);
         }
-    }
+    };
+
+    const handleFocus = () => {
+        setTextFieldError(false);
+        setLabelTask(NEW_TASK);
+    };
+    
+    const handleBlur = () => {
+        if (!text.trim()) {
+            setLabelTask(NEW_TASK);
+            setTextFieldError(false);
+        }
+        setFocused(false);
+    };
 
     const onChangeTaskText = (event: React.ChangeEvent<HTMLInputElement>) => {
         if(text === EMPTY_STRING_VALUE){
             setLabelTask(NEW_TASK);
             setTextFieldError(false);
         }
-        setText(event.target.value);
-    } 
+      setText(event.target.value);
+    }; 
 
-    const handleBlur = () => {
-        setLabelTask(NEW_TASK);
-        setTextFieldError(false);
-    };
 
     return (
         <Box 
@@ -61,6 +70,7 @@ export default function AddTaskForm() {
                     value={text}
                     label={labelTask}
                     onChange={onChangeTaskText}
+                    onFocus={handleFocus}
                     onBlur={handleBlur}
                     InputLabelProps={{
                         shrink: true,
@@ -72,7 +82,23 @@ export default function AddTaskForm() {
                                     <AddIcon color={'primary'} />
                                 </IconButton>
                             </InputAdornment>
-                        )
+                        ),
+                        sx: {
+                            "& input:-internal-autofill-selected": {
+                                WebkitBoxShadow: "0 0 0 1000px #93ad89 inset", 
+                                WebkitTextFillColor: "black",
+                            },
+                            '& input:-webkit-autofill': {
+                                '-webkit-box-shadow': '0 0 0 30px #93ad89 inset !important',
+                                '-webkit-text-fill-color': 'black !important',
+                            },
+                            '& .MuiInputBase-input': {
+                                '&:-webkit-autofill': {
+                                    boxShadow: '0 0 0 30px #93ad89 inset',
+                                    WebkitTextFillColor: 'black',
+                                },
+                            },
+                        },
                     }}
                 />   
         </Box>

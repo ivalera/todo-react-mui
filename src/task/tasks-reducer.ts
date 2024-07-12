@@ -2,8 +2,6 @@ import { Action, TaskType } from "./type";
 
 function tasksReducer(tasks: TaskType[], action: Action) {
     switch (action.type) {
-        case 'initialize':
-            return action.tasks;
         case 'added': {
             return [...tasks, {
                 id: action.id,
